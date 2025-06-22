@@ -1,0 +1,38 @@
+/* Custom styles (if needed beyond Tailwind) */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#logs-console {
+    white-space: pre-wrap; /* Ensure logs wrap and preserve whitespace */
+    word-break: break-all; /* Break long words/strings to prevent overflow */
+}
+
+/* Styling for scrollbars in logs console (optional, browser-dependent) */
+#logs-console::-webkit-scrollbar {
+    width: 8px;
+}
+
+#logs-console::-webkit-scrollbar-track {
+    background: #1f2937; /* bg-gray-800 */
+}
+
+#logs-console::-webkit-scrollbar-thumb {
+    background: #4b5563; /* bg-gray-600 */
+    border-radius: 4px;
+}
+
+#logs-console::-webkit-scrollbar-thumb:hover {
+    background: #6b7280; /* bg-gray-500 */
+}
+
+/* Ensure disabled buttons are visually distinct */
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important; /* Ensure cursor changes */
+}
+
+/* Add a subtle glow to focused form elements */
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.3); /* Tailwind red-500 with opacity */
+}

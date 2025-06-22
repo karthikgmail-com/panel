@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZxD Web Panel</title>
+    <!-- Placeholder for Tailwind CSS or Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-gray-900 text-white">
+    <div class="container mx-auto p-4">
+        <header class="mb-8 text-center">
+            <h1 class="text-4xl font-bold text-red-500">ZxD Attack Panel</h1>
+            <p class="text-gray-400">Control and monitor your DoS lab tests.</p>
+        </header>
+
+        <!-- Login Section (Initially visible, hidden after login) -->
+        <section id="login-section" class="max-w-md mx-auto bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h2 class="text-2xl font-semibold mb-4 text-center text-red-400">Login</h2>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="username" class="block mb-2 text-sm font-medium text-gray-300">Username</label>
+                    <input type="text" id="username" name="username" required
+                           class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 placeholder-gray-400">
+                </div>
+                <div class="mb-6">
+                    <label for="password" class="block mb-2 text-sm font-medium text-gray-300">Password</label>
+                    <input type="password" id="password" name="password" required
+                           class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 placeholder-gray-400">
+                </div>
+                <button type="submit"
+                        class="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150">
+                    Login
+                </button>
+                <p id="login-error" class="text-red-400 text-sm mt-2 text-center"></p>
+            </form>
+        </section>
+
+        <!-- Main Control Panel (Initially hidden, shown after login) -->
+        <main id="control-panel" class="hidden">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-semibold text-red-400">Control Panel</h2>
+                <button id="logout-button" class="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded-lg transition duration-150">
+                    Logout
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Attack Configuration -->
+                <section id="attack-config" class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                    <h3 class="text-xl font-semibold mb-4 text-red-400 border-b border-gray-700 pb-2">Attack Configuration</h3>
+                    <form id="attack-form">
+                        <div class="mb-4">
+                            <label for="target" class="block mb-1 text-sm font-medium text-gray-300">Target (IP/Host)</label>
+                            <input type="text" id="target" name="target" required placeholder="e.g., 1.2.3.4 or example.com"
+                                   class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 placeholder-gray-500">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="port" class="block mb-1 text-sm font-medium text-gray-300">Port</label>
+                                <input type="number" id="port" name="port" required placeholder="e.g., 80"
+                                       class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 placeholder-gray-500">
+                            </div>
+                            <div>
+                                <label for="duration" class="block mb-1 text-sm font-medium text-gray-300">Duration (sec)</label>
+                                <input type="number" id="duration" name="duration" required placeholder="e.g., 60"
+                                       class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 placeholder-gray-500">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="method" class="block mb-1 text-sm font-medium text-gray-300">Method</label>
+                                <select id="method" name="method"
+                                        class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500">
+                                    <option value="UDP">UDP</option>
+                                    <option value="TCP">TCP</option>
+                                    <option value="HTTP-GET">HTTP-GET</option>
+                                    <option value="HTTP-POST">HTTP-POST</option>
+                                    <option value="SYN">SYN</option>
+                                    <!-- Add more methods as supported by Zxd -->
+                                </select>
+                            </div>
+                            <div>
+                                <label for="threads" class="block mb-1 text-sm font-medium text-gray-300">Threads</label>
+                                <input type="number" id="threads" name="threads" required placeholder="e.g., 100" value="100"
+                                       class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 placeholder-gray-500">
+                            </div>
+                        </div>
+                         <div class="mb-4">
+                            <label for="proxy-list" class="block mb-1 text-sm font-medium text-gray-300">Proxy List (optional, one per line)</label>
+                            <textarea id="proxy-list" name="proxy-list" rows="3" placeholder="e.g., 1.2.3.4:8080&#10;5.6.7.8:3128"
+                                      class="w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:ring-red-500 focus:border-red-500 placeholder-gray-500"></textarea>
+                        </div>
+                        <div class="flex space-x-4">
+                            <button type="submit" id="start-attack"
+                                    class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150">
+                                Start Attack
+                            </button>
+                            <button type="button" id="stop-attack" disabled
+                                    class="flex-1 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg focus:outline-none focus:shadow-outline transition duration-150 opacity-50 cursor-not-allowed">
+                                Stop Attack
+                            </button>
+                        </div>
+                    </form>
+                </section>
+
+                <!-- System Status (Bonus) -->
+                <section id="system-status" class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                    <h3 class="text-xl font-semibold mb-4 text-red-400 border-b border-gray-700 pb-2">System Status</h3>
+                    <div class="space-y-2 text-sm">
+                        <p>CPU Usage: <span id="cpu-usage" class="font-mono text-green-400">N/A</span></p>
+                        <p>RAM Usage: <span id="ram-usage" class="font-mono text-green-400">N/A</span></p>
+                        <p>Active Attacks: <span id="active-attacks" class="font-mono text-yellow-400">0</span></p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Live Logs -->
+            <section id="live-logs" class="bg-gray-800 p-6 rounded-lg shadow-xl mb-8">
+                <h3 class="text-xl font-semibold mb-4 text-red-400 border-b border-gray-700 pb-2">Live Logs</h3>
+                <div id="logs-console" class="w-full h-64 bg-gray-900 p-3 rounded-md overflow-y-auto font-mono text-sm text-gray-300 border border-gray-700">
+                    Welcome to ZxD Panel. Waiting for attack to start...
+                </div>
+            </section>
+
+            <!-- Attack History -->
+            <section id="attack-history" class="bg-gray-800 p-6 rounded-lg shadow-xl">
+                <h3 class="text-xl font-semibold mb-4 text-red-400 border-b border-gray-700 pb-2">Attack History</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left text-gray-400">
+                        <thead class="text-xs text-gray-300 uppercase bg-gray-700">
+                            <tr>
+                                <th scope="col" class="px-6 py-3">Timestamp</th>
+                                <th scope="col" class="px-6 py-3">Target</th>
+                                <th scope="col" class="px-6 py-3">Port</th>
+                                <th scope="col" class="px-6 py-3">Method</th>
+                                <th scope="col" class="px-6 py-3">Duration</th>
+                                <th scope="col" class="px-6 py-3">Status</th>
+                                <th scope="col" class="px-6 py-3">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="history-table-body">
+                            <!-- Rows will be added by JavaScript -->
+                            <tr class="bg-gray-800 border-b border-gray-700">
+                                <td colspan="7" class="px-6 py-4 text-center">No attack history yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <footer class="mt-12 text-center text-sm text-gray-500">
+            <p>ZxD Web Panel - For educational and lab testing purposes only.</p>
+            <p>Do not use for illegal activities.</p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
