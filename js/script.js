@@ -1,10 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const standardSelect = document.getElementById('standard-select');
-    const subjectSelect = document.getElementById('subject-select');
-    const lessonSelect = document.getElementById('lesson-select');
+    // const standardSelect = document.getElementById('standard-select'); // Old select
+    const standardChipsContainer = document.getElementById('standard-chips-container');
+    const standardChips = standardChipsContainer ? standardChipsContainer.querySelectorAll('.standard-chip') : [];
+
+    const subjectPillsContainer = document.getElementById('subject-pills-container');
+    const subjectLabel = document.getElementById('subject-label');
+    const subjectSelect = document.getElementById('subject-select'); // Hidden select to store value
+
+    const lessonLabel = document.getElementById('lesson-label'); // To show/hide lesson section
+    const lessonSelect = document.getElementById('lesson-select'); // Will be replaced by modal later
     const startQuizBtn = document.getElementById('start-quiz-btn');
 
-    // Mock data for subjects and lessons. This will eventually be more dynamic or configurable.
+    let selectedStandardValue = '';
+    let selectedSubjectValue = ''; // To store the currently selected subject
+
+    // Mock data for subjects and lessons.
     const subjectData = {
         "+1": {
             "Physics": ["Lesson 1: Physical World", "Lesson 2: Kinematics", "Lesson 3: Dynamics"],
@@ -22,52 +32,95 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    standardSelect.addEventListener('change', () => {
-        const selectedStandard = standardSelect.value;
-        subjectSelect.innerHTML = '<option value="">Select Subject</option>'; // Reset
-        lessonSelect.innerHTML = '<option value="">Select Lesson (or All Lessons)</option><option value="mixed">All Lessons (Mixed Questions)</option>'; // Reset
-        subjectSelect.disabled = true;
-        lessonSelect.disabled = true;
-        startQuizBtn.disabled = true;
+    // Active/Inactive classes for chips
+    const activeChipClasses = ['bg-blue-600', 'text-white', 'border-blue-700', 'dark:bg-sky-500', 'dark:text-slate-900', 'dark:border-sky-600', 'scale-105', 'ring-2', 'ring-blue-500', 'dark:ring-sky-400', 'ring-offset-2'];
+    const inactiveChipClasses = ['bg-white', 'dark:bg-slate-700', 'border-gray-300', 'dark:border-slate-600', 'text-blue-600', 'dark:text-sky-400', 'hover:bg-gray-100', 'dark:hover:bg-slate-600', 'hover:scale-105'];
 
-        if (selectedStandard && subjectData[selectedStandard]) {
-            const subjects = Object.keys(subjectData[selectedStandard]);
-            subjects.forEach(subject => {
-                const option = document.createElement('option');
-                option.value = subject;
-                option.textContent = subject;
-                subjectSelect.appendChild(option);
+    const activePillClasses = ['bg-blue-600', 'text-white', 'border-blue-700', 'dark:bg-sky-500', 'dark:text-slate-900', 'dark:border-sky-600', 'scale-105', 'shadow-lg'];
+    const inactivePillClasses = ['bg-white', 'dark:bg-slate-700', 'border-gray-300', 'dark:border-slate-600', 'text-blue-600', 'dark:text-sky-400', 'hover:bg-gray-100', 'dark:hover:bg-slate-600', 'hover:scale-105', 'shadow-md'];
+
+
+    function resetSubjectSelection() {
+        if (subjectPillsContainer) subjectPillsContainer.innerHTML = ''; // Clear old pills
+        if (subjectPillsContainer) subjectPillsContainer.style.display = 'none';
+        if (subjectLabel) subjectLabel.style.display = 'none';
+        subjectSelect.value = ''; // Reset hidden select
+        selectedSubjectValue = '';
+    }
+
+    function resetLessonSelection() {
+        lessonSelect.innerHTML = '<option value="">Select Lesson (or All Lessons)</option><option value="mixed">All Lessons (Mixed Questions)</option>';
+        if (lessonLabel) lessonLabel.style.display = 'none';
+        lessonSelect.style.display = 'none'; // This will be modal later
+        lessonSelect.disabled = true;
+    }
+
+    standardChips.forEach(chip => {
+        chip.addEventListener('click', () => {
+            selectedStandardValue = chip.dataset.value;
+
+            standardChips.forEach(c => {
+                c.classList.remove(...activeChipClasses, 'ring-2', 'ring-blue-500', 'dark:ring-sky-400', 'ring-offset-2'); // Also remove explicit ring classes
+                c.classList.add(...inactiveChipClasses);
             });
-            subjectSelect.disabled = false;
-        }
+            chip.classList.add(...activeChipClasses);
+            chip.classList.remove(...inactiveChipClasses);
+
+            // Reset subsequent selections
+            resetSubjectSelection();
+            resetLessonSelection();
+            startQuizBtn.disabled = true;
+
+            if (selectedStandardValue && subjectData[selectedStandardValue]) {
+                if (subjectLabel) subjectLabel.style.display = 'block';
+                if (subjectPillsContainer) subjectPillsContainer.style.display = 'grid';
+                const subjects = Object.keys(subjectData[selectedStandardValue]);
+                subjects.forEach(subjectText => {
+                    const pill = document.createElement('button');
+                    pill.dataset.value = subjectText;
+                    pill.textContent = subjectText;
+                    pill.className = `subject-pill py-2.5 px-4 rounded-full text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800`;
+                    pill.classList.add(...inactivePillClasses, 'focus:ring-indigo-500', 'dark:focus:ring-sky-400');
+
+                    pill.addEventListener('click', () => {
+                        selectedSubjectValue = pill.dataset.value;
+                        subjectSelect.value = selectedSubjectValue; // Update hidden select
+
+                        subjectPillsContainer.querySelectorAll('.subject-pill').forEach(p => {
+                            p.classList.remove(...activePillClasses);
+                            p.classList.add(...inactivePillClasses);
+                        });
+                        pill.classList.add(...activePillClasses);
+                        pill.classList.remove(...inactivePillClasses);
+
+                        // Populate and show lesson selection (currently dropdown, will be modal)
+                        resetLessonSelection();
+                        if (lessonLabel) lessonLabel.style.display = 'block'; // Show lesson label
+                        lessonSelect.style.display = 'block'; // Show lesson dropdown for now
+
+                        if (selectedStandardValue && selectedSubjectValue && subjectData[selectedStandardValue] && subjectData[selectedStandardValue][selectedSubjectValue]) {
+                            const lessons = subjectData[selectedStandardValue][selectedSubjectValue];
+                            lessons.forEach((lesson, index) => {
+                                const option = document.createElement('option');
+                                option.value = `lesson${index + 1}`;
+                                option.textContent = lesson;
+                                lessonSelect.appendChild(option);
+                            });
+                            lessonSelect.disabled = false;
+                        } else if (selectedSubjectValue) { // Only "Mixed" available
+                            lessonSelect.disabled = false;
+                        }
+                        startQuizBtn.disabled = true; // Lesson must be chosen
+                    });
+                    if (subjectPillsContainer) subjectPillsContainer.appendChild(pill);
+                });
+            }
+        });
     });
 
-    subjectSelect.addEventListener('change', () => {
-        const selectedStandard = standardSelect.value;
-        const selectedSubject = subjectSelect.value;
-        lessonSelect.innerHTML = '<option value="">Select Lesson (or All Lessons)</option><option value="mixed">All Lessons (Mixed Questions)</option>'; // Reset
-        lessonSelect.disabled = true;
-        startQuizBtn.disabled = true;
-
-
-        if (selectedStandard && selectedSubject && subjectData[selectedStandard] && subjectData[selectedStandard][selectedSubject]) {
-            const lessons = subjectData[selectedStandard][selectedSubject];
-            lessons.forEach((lesson, index) => {
-                const option = document.createElement('option');
-                // Assuming lesson files are named lesson1.json, lesson2.json etc.
-                // This needs to match the actual file naming convention.
-                option.value = `lesson${index + 1}`; // Or use actual lesson names if they map to filenames
-                option.textContent = lesson;
-                lessonSelect.appendChild(option);
-            });
-            lessonSelect.disabled = false;
-        } else if (selectedSubject) { // If subject is selected but no specific lessons (e.g. only mixed mode desired)
-             lessonSelect.disabled = false; // Allow selecting "All Lessons"
-        }
-    });
-
+    // This event listener remains for the (soon to be replaced) lesson dropdown
     lessonSelect.addEventListener('change', () => {
-        if (lessonSelect.value) {
+        if (lessonSelect.value && selectedSubjectValue && selectedStandardValue) {
             startQuizBtn.disabled = false;
         } else {
             startQuizBtn.disabled = true;
@@ -75,16 +128,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     startQuizBtn.addEventListener('click', () => {
-        const standard = standardSelect.value;
-        const subject = subjectSelect.value;
-        const lesson = lessonSelect.value;
+        const standard = selectedStandardValue; // Use the chip selected value
+        const subject = subjectSelect.value; // Will get from selected subject pill later
+        const lesson = lessonSelect.value; // Will get from lesson modal later
 
         if (standard && subject && lesson) {
-            // Encode standard to be URL-friendly (e.g., +1 becomes plus1)
             const encodedStandard = standard.replace('+', 'plus');
             window.location.href = `quiz.html?standard=${encodedStandard}&subject=${encodeURIComponent(subject)}&lesson=${encodeURIComponent(lesson)}`;
         } else {
-            // Should not happen if button is enabled correctly, but as a fallback:
             alert("Please make all selections.");
         }
     });
@@ -109,14 +160,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         applyTheme(savedTheme);
-    } else { // Default to light or check system preference
-        // Check system preference (optional)
-        // if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        //     applyTheme('dark');
-        // } else {
-        //     applyTheme('light');
-        // }
-        applyTheme('light'); // Default to light if no preference
+    } else {
+        // Default to system preference if no theme is saved in localStorage
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        } else {
+            applyTheme('light');
+        }
     }
 
     if (darkModeToggle) {

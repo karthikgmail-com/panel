@@ -19,26 +19,30 @@
         <main id="home-page" class="mt-10 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl max-w-lg mx-auto">
             <h2 class="text-2xl sm:text-3xl font-semibold mb-8 text-center text-gray-700 dark:text-gray-200">Start a Test</h2>
 
-            <div class="mb-5">
-                <label for="standard-select" class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-1.5">Standard:</label>
-                <select id="standard-select" name="standard" class="mt-1 block w-full py-2.5 px-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-md">
-                    <option value="">Select Standard</option>
-                    <option value="+1">+1 (Class 11)</option>
-                    <option value="+2">+2 (Class 12)</option>
-                </select>
+            <div class="mb-6">
+                <label class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-2 text-center">Select Standard:</label>
+                <div id="standard-chips-container" class="flex justify-center gap-3 sm:gap-4">
+                    <button data-value="+1" class="standard-chip text-lg font-semibold py-2.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-blue-600 dark:text-sky-400 hover:bg-gray-100 dark:hover:bg-slate-600 hover:scale-105">
+                        +1 <span class="text-sm font-normal">(Class 11)</span>
+                    </button>
+                    <button data-value="+2" class="standard-chip text-lg font-semibold py-2.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-blue-600 dark:text-sky-400 hover:bg-gray-100 dark:hover:bg-slate-600 hover:scale-105">
+                        +2 <span class="text-sm font-normal">(Class 12)</span>
+                    </button>
+                </div>
             </div>
 
-            <div class="mb-5">
-                <label for="subject-select" class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-1.5">Subject:</label>
-                <select id="subject-select" name="subject" class="mt-1 block w-full py-2.5 px-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-md" disabled>
-                    <option value="">Select Subject</option>
-                    {/* Options will be populated by JS */}
-                </select>
+            <div class="mb-6">
+                <label id="subject-label" class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-2 text-center" style="display: none;">Select Subject:</label>
+                <div id="subject-pills-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-2" style="display: none;">
+                    {/* Subject pill buttons will be dynamically inserted here by JS */}
+                </div>
+                {/* Keep the old select hidden for now, to store the selected value easily until lesson UI is also changed */}
+                <select id="subject-select" name="subject" class="hidden" disabled> <option value=""></option> </select>
             </div>
 
             <div class="mb-8">
-                <label for="lesson-select" class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-1.5">Lesson:</label>
-                <select id="lesson-select" name="lesson" class="mt-1 block w-full py-2.5 px-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-md" disabled>
+                <label id="lesson-label" class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-1.5" style="display: none;">Lesson:</label>
+                <select id="lesson-select" name="lesson" class="mt-1 block w-full py-2.5 px-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-md" disabled style="display: none;">
                     <option value="">Select Lesson (or All Lessons)</option>
                     <option value="mixed">All Lessons (Mixed Questions)</option>
                     {/* Options will be populated by JS */}
