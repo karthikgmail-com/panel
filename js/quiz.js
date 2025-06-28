@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (loadingIndicator) loadingIndicator.style.display = 'none';
             if (questionsContainer) {
                 questionsContainer.style.display = 'block'; // Show container to display the error
-                questionsContainer.innerHTML = `<p class="text-red-500 dark:text-red-400 text-center p-4">Could not load quiz questions. The file might be missing or there's a network issue.<br>Attempted path: ${filePath}<br>Please check the console for more details and ensure the JSON data files exist at the correct location.</p>`;
+                questionsContainer.innerHTML = `<p class="text-red-500 dark:text-red-400 text-center p-4">Fatal Error (contact admin)</p>`;
             }
             if (submitQuizBtn) submitQuizBtn.style.display = 'none';
         }
@@ -134,8 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
                             optionLabel = `${option.text ? `<span class="option-text">${option.text}</span>` : ''}
                                          ${option.image ? `<img src="${option.image}" alt="Option image" class="option-image ml-2 my-1 inline-block max-h-16 rounded">` : ''}`;
                         }
+                        // Applied .option-label and simplified base classes. Hover styles from Tailwind.
                         return `
-                            <label for="${optionId}" class="block p-3 rounded-md border border-gray-300 hover:bg-indigo-50 focus:bg-indigo-100 cursor-pointer transition-colors duration-150 ease-in-out has-[:checked]:bg-indigo-100 has-[:checked]:border-indigo-500">
+                            <label for="${optionId}" class="option-label block p-3 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer">
                                 <input type="radio" name="question${index}" id="${optionId}" value="${(typeof option === 'string' ? option : option.text) || `option_${i}`}" class="mr-3 opacity-0 absolute">
                                 ${optionLabel}
                             </label>`;
@@ -144,15 +145,15 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             questionsContainer.appendChild(questionElement);
 
-            // Add event listener for selecting options to give visual feedback
+            // Add event listener for selecting options to give visual feedback using the .selected class
             const radioButtons = questionElement.querySelectorAll(`input[name="question${index}"]`);
             radioButtons.forEach(radio => {
                 radio.addEventListener('change', (event) => {
                     // Remove 'selected' class from all labels for this question
-                    questionElement.querySelectorAll('.options label').forEach(label => label.classList.remove('selected', 'border-indigo-500', 'bg-indigo-100'));
-                    // Add 'selected' class to the chosen label
+                    questionElement.querySelectorAll('.options label.selected').forEach(label => label.classList.remove('selected'));
+
                     if (event.target.checked) {
-                        event.target.parentElement.classList.add('selected', 'border-indigo-500', 'bg-indigo-100');
+                        event.target.parentElement.classList.add('selected');
                         userAnswers[index] = event.target.value;
                     }
                 });
