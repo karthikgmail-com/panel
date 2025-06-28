@@ -1,0 +1,33 @@
+[
+  {
+    "question": "Which of the following is an example of an amorphous solid?",
+    "options": ["Diamond", "Graphite", "Glass", "Sodium Chloride"],
+    "answer": "Glass"
+  },
+  {
+    "question": "The number of atoms in a body-centered cubic (BCC) unit cell is:",
+    "options": ["1", "2", "4", "6"],
+    "answer": "2"
+  },
+  {
+    "question": "Identify the type of crystal defect shown in the image.",
+    "question_image": "https://via.placeholder.com/250x180.png?text=Crystal+Defect",
+    "options": ["Schottky Defect", "Frenkel Defect", "Metal Excess Defect", "Impurity Defect"],
+    "answer": "Frenkel Defect"
+  },
+  {
+    "question": "Which of these molecules is polar?",
+    "options": [
+      {"text": "CH4 (Methane)"},
+      {"text": "CO2 (Carbon Dioxide)"},
+      {"text": "H2O (Water)", "image": "https://via.placeholder.com/100x80.png?text=H2O+Bent"},
+      {"text": "N2 (Nitrogen)"}
+    ],
+    "answer": "H2O (Water)"
+  },
+  {
+    "question": "What is the coordination number of Na+ in NaCl crystal structure?",
+    "options": ["4", "6", "8", "12"],
+    "answer": "6"
+  }
+]

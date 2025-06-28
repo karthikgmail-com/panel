@@ -1,0 +1,50 @@
+[
+  {
+    "question": "What is the SI unit of force?",
+    "options": ["Watt", "Newton", "Joule", "Pascal"],
+    "answer": "Newton"
+  },
+  {
+    "question": "Newton's first law of motion is also known as the law of:",
+    "options": ["Action-Reaction", "Inertia", "Momentum", "Energy"],
+    "answer": "Inertia"
+  },
+  {
+    "question": "Identify the instrument shown in the image.",
+    "question_image": "https://via.placeholder.com/300x150.png?text=Vernier+Calliper",
+    "options": [
+      "Screw Gauge",
+      "Vernier Calliper",
+      "Spherometer",
+      "Common Balance"
+    ],
+    "answer": "Vernier Calliper"
+  },
+  {
+    "question": "A force of 10 N acts on a body of mass 2 kg. What is the acceleration produced?",
+    "options": ["20 m/s²", "0.2 m/s²", "5 m/s²", "12 m/s²"],
+    "answer": "5 m/s²"
+  },
+  {
+    "question": "Which of these graphs represents uniform motion?",
+    "options": [
+      {
+        "text": "Graph A",
+        "image": "https://via.placeholder.com/150x100.png?text=Graph+A (Curved)"
+      },
+      {
+        "text": "Graph B",
+        "image": "https://via.placeholder.com/150x100.png?text=Graph+B (Straight+Line)"
+      },
+      {
+        "text": "Graph C",
+        "image": "https://via.placeholder.com/150x100.png?text=Graph+C (ZigZag)"
+      },
+      {
+        "text": "Graph D",
+        "image": "https://via.placeholder.com/150x100.png?text=Graph+D (Circle)"
+      }
+    ],
+    "answer": "Graph B"
+  }
+]

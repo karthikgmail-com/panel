@@ -1,0 +1,22 @@
+[
+  {
+    "question": "Newton's first law of motion is also known as the law of:",
+    "options": ["Action-Reaction", "Inertia", "Momentum", "Energy"],
+    "answer": "Inertia"
+  },
+  {
+    "question": "What is the acceleration of a body moving with uniform velocity?",
+    "options": ["Constant", "Zero", "Variable", "Infinite"],
+    "answer": "Zero"
+  },
+  {
+    "question": "A force of 10 N acts on a body of mass 2 kg. What is the acceleration produced?",
+    "options": ["20 m/s²", "0.2 m/s²", "5 m/s²", "12 m/s²"],
+    "answer": "5 m/s²"
+  },
+  {
+    "question": "Momentum is the product of mass and __________.",
+    "options": ["Acceleration", "Force", "Velocity", "Displacement"],
+    "answer": "Velocity"
+  }
+]
