@@ -1,33 +1,28 @@
 [
   {
-    "question": "Which of the following is an example of an amorphous solid?",
-    "options": ["Diamond", "Graphite", "Glass", "Sodium Chloride"],
-    "answer": "Glass"
+    "question": "Which of the following is an example of a covalent solid?",
+    "options": ["NaCl", "Ice", "Diamond", "Copper"],
+    "answer": "Diamond"
   },
   {
-    "question": "The number of atoms in a body-centered cubic (BCC) unit cell is:",
-    "options": ["1", "2", "4", "6"],
-    "answer": "2"
+    "question": "The packing efficiency in a face-centered cubic (FCC) structure is:",
+    "options": ["52.4%", "68%", "74%", "90%"],
+    "answer": "74%"
   },
   {
-    "question": "Identify the type of crystal defect shown in the image.",
-    "question_image": "https://via.placeholder.com/250x180.png?text=Crystal+Defect",
-    "options": ["Schottky Defect", "Frenkel Defect", "Metal Excess Defect", "Impurity Defect"],
-    "answer": "Frenkel Defect"
+    "question": "What type of stoichiometric defect is shown by ZnS?",
+    "question_image": "https://via.placeholder.com/280x160.png?text=Crystal+Defect+ZnS",
+    "options": ["Schottky defect", "Frenkel defect", "Metal excess defect", "Impurity defect"],
+    "answer": "Frenkel defect"
   },
   {
-    "question": "Which of these molecules is polar?",
+    "question": "Which of the following is paramagnetic in nature?",
     "options": [
-      {"text": "CH4 (Methane)"},
-      {"text": "CO2 (Carbon Dioxide)"},
-      {"text": "H2O (Water)", "image": "https://via.placeholder.com/100x80.png?text=H2O+Bent"},
-      {"text": "N2 (Nitrogen)"}
+      {"text": "O₂"},
+      {"text": "N₂"},
+      {"text": "H₂O"},
+      {"text": "NaCl", "image": "https://via.placeholder.com/100x75.png?text=NaCl+Crystal"}
     ],
-    "answer": "H2O (Water)"
-  },
-  {
-    "question": "What is the coordination number of Na+ in NaCl crystal structure?",
-    "options": ["4", "6", "8", "12"],
-    "answer": "6"
+    "answer": "O₂"
   }
 ]

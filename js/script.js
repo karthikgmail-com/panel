@@ -1,169 +1,127 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // const standardSelect = document.getElementById('standard-select'); // Old select
-    const standardChipsContainer = document.getElementById('standard-chips-container');
-    const standardChips = standardChipsContainer ? standardChipsContainer.querySelectorAll('.standard-chip') : [];
-
-    const subjectPillsContainer = document.getElementById('subject-pills-container');
-    const subjectLabel = document.getElementById('subject-label');
-    const subjectSelect = document.getElementById('subject-select'); // Hidden select to store value
-
-    const lessonLabel = document.getElementById('lesson-label'); // To show/hide lesson section
-    const lessonSelect = document.getElementById('lesson-select'); // Will be replaced by modal later
+    const standardSelect = document.getElementById('standard-select');
+    const subjectSelect = document.getElementById('subject-select');
+    const lessonSelect = document.getElementById('lesson-select');
     const startQuizBtn = document.getElementById('start-quiz-btn');
-
-    let selectedStandardValue = '';
-    let selectedSubjectValue = ''; // To store the currently selected subject
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const body = document.body;
 
     // Mock data for subjects and lessons.
     const subjectData = {
         "+1": {
-            "Physics": ["Lesson 1: Physical World", "Lesson 2: Kinematics", "Lesson 3: Dynamics"],
-            "Chemistry": ["Lesson 1: Basic Concepts", "Lesson 2: Structure of Atom"],
-            "Botany": ["Lesson 1: Plant Kingdom", "Lesson 2: Morphology"],
-            "Zoology": ["Lesson 1: Animal Kingdom", "Lesson 2: Cell Biology"],
-            "Computer Science": ["Lesson 1: Introduction", "Lesson 2: Algorithms"]
+            "Physics": ["Lesson 1: Nature of Physical World and Measurement", "Lesson 2: Kinematics", "Lesson 3: Laws of Motion"],
+            "Chemistry": ["Lesson 1: Basic Concepts of Chemistry and Chemical Calculations", "Lesson 2: Quantum Mechanical Model of Atom"],
+            "Botany": ["Lesson 1: Living World", "Lesson 2: Plant Kingdom"],
+            "Zoology": ["Lesson 1: The Living World", "Lesson 2: Animal Kingdom"],
+            "Computer Science": ["Lesson 1: Introduction to Computers", "Lesson 2: Number Systems"]
         },
         "+2": {
-            "Physics": ["Lesson 1: Electrostatics", "Lesson 2: Current Electricity"],
-            "Chemistry": ["Lesson 1: Solid State", "Lesson 2: Solutions"],
-            "Botany": ["Lesson 1: Plant Physiology", "Lesson 2: Genetics"],
-            "Zoology": ["Lesson 1: Human Physiology", "Lesson 2: Evolution"],
-            "Computer Science": ["Lesson 1: Data Structures", "Lesson 2: Python Programming"]
+            "Physics": ["Lesson 1: Electrostatics", "Lesson 2: Current Electricity", "Lesson 3: Magnetism and Magnetic Effects of Electric Current"],
+            "Chemistry": ["Lesson 1: Solid State", "Lesson 2: Solutions", "Lesson 3: Electrochemistry"],
+            "Botany": ["Lesson 1: Asexual and Sexual Reproduction in Plants", "Lesson 2: Classical Genetics"],
+            "Zoology": ["Lesson 1: Reproduction in Organisms", "Lesson 2: Human Reproduction"],
+            "Computer Science": ["Lesson 1: Function", "Lesson 2: Data Abstraction"]
         }
     };
 
-    // Active/Inactive classes for chips
-    const activeChipClasses = ['bg-blue-600', 'text-white', 'border-blue-700', 'dark:bg-sky-500', 'dark:text-slate-900', 'dark:border-sky-600', 'scale-105', 'ring-2', 'ring-blue-500', 'dark:ring-sky-400', 'ring-offset-2'];
-    const inactiveChipClasses = ['bg-white', 'dark:bg-slate-700', 'border-gray-300', 'dark:border-slate-600', 'text-blue-600', 'dark:text-sky-400', 'hover:bg-gray-100', 'dark:hover:bg-slate-600', 'hover:scale-105'];
+    function updateDropdownsState() {
+        const standardSelected = standardSelect.value !== "";
+        const subjectSelected = subjectSelect.value !== "";
+        const lessonSelected = lessonSelect.value !== "";
 
-    const activePillClasses = ['bg-blue-600', 'text-white', 'border-blue-700', 'dark:bg-sky-500', 'dark:text-slate-900', 'dark:border-sky-600', 'scale-105', 'shadow-lg'];
-    const inactivePillClasses = ['bg-white', 'dark:bg-slate-700', 'border-gray-300', 'dark:border-slate-600', 'text-blue-600', 'dark:text-sky-400', 'hover:bg-gray-100', 'dark:hover:bg-slate-600', 'hover:scale-105', 'shadow-md'];
+        subjectSelect.disabled = !standardSelected;
+        lessonSelect.disabled = !standardSelected || !subjectSelected;
+        startQuizBtn.disabled = !standardSelected || !subjectSelected || !lessonSelected;
 
-
-    function resetSubjectSelection() {
-        if (subjectPillsContainer) subjectPillsContainer.innerHTML = ''; // Clear old pills
-        if (subjectPillsContainer) subjectPillsContainer.style.display = 'none';
-        if (subjectLabel) subjectLabel.style.display = 'none';
-        subjectSelect.value = ''; // Reset hidden select
-        selectedSubjectValue = '';
+        // Styling for disabled button to make it more apparent
+        if (startQuizBtn.disabled) {
+            startQuizBtn.classList.add('opacity-50', 'cursor-not-allowed');
+            startQuizBtn.classList.remove('hover:bg-blue-700', 'dark:hover:bg-sky-600', 'hover:shadow-lg');
+        } else {
+            startQuizBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+            startQuizBtn.classList.add('hover:bg-blue-700', 'dark:hover:bg-sky-600', 'hover:shadow-lg');
+        }
     }
 
-    function resetLessonSelection() {
-        lessonSelect.innerHTML = '<option value="">Select Lesson (or All Lessons)</option><option value="mixed">All Lessons (Mixed Questions)</option>';
-        if (lessonLabel) lessonLabel.style.display = 'none';
-        lessonSelect.style.display = 'none'; // This will be modal later
-        lessonSelect.disabled = true;
-    }
+    standardSelect.addEventListener('change', () => {
+        const selectedStandard = standardSelect.value;
+        // Reset dependent dropdowns
+        subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+        lessonSelect.innerHTML = '<option value="">Select Lesson</option><option value="mixed">All Lessons (Mixed Questions)</option>';
 
-    standardChips.forEach(chip => {
-        chip.addEventListener('click', () => {
-            selectedStandardValue = chip.dataset.value;
-
-            standardChips.forEach(c => {
-                c.classList.remove(...activeChipClasses, 'ring-2', 'ring-blue-500', 'dark:ring-sky-400', 'ring-offset-2'); // Also remove explicit ring classes
-                c.classList.add(...inactiveChipClasses);
+        if (selectedStandard && subjectData[selectedStandard]) {
+            const subjects = Object.keys(subjectData[selectedStandard]);
+            subjects.forEach(subject => {
+                const option = document.createElement('option');
+                option.value = subject;
+                option.textContent = subject;
+                subjectSelect.appendChild(option);
             });
-            chip.classList.add(...activeChipClasses);
-            chip.classList.remove(...inactiveChipClasses);
-
-            // Reset subsequent selections
-            resetSubjectSelection();
-            resetLessonSelection();
-            startQuizBtn.disabled = true;
-
-            if (selectedStandardValue && subjectData[selectedStandardValue]) {
-                if (subjectLabel) subjectLabel.style.display = 'block';
-                if (subjectPillsContainer) subjectPillsContainer.style.display = 'grid';
-                const subjects = Object.keys(subjectData[selectedStandardValue]);
-                subjects.forEach(subjectText => {
-                    const pill = document.createElement('button');
-                    pill.dataset.value = subjectText;
-                    pill.textContent = subjectText;
-                    pill.className = `subject-pill py-2.5 px-4 rounded-full text-sm font-semibold transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800`;
-                    pill.classList.add(...inactivePillClasses, 'focus:ring-indigo-500', 'dark:focus:ring-sky-400');
-
-                    pill.addEventListener('click', () => {
-                        selectedSubjectValue = pill.dataset.value;
-                        subjectSelect.value = selectedSubjectValue; // Update hidden select
-
-                        subjectPillsContainer.querySelectorAll('.subject-pill').forEach(p => {
-                            p.classList.remove(...activePillClasses);
-                            p.classList.add(...inactivePillClasses);
-                        });
-                        pill.classList.add(...activePillClasses);
-                        pill.classList.remove(...inactivePillClasses);
-
-                        // Populate and show lesson selection (currently dropdown, will be modal)
-                        resetLessonSelection();
-                        if (lessonLabel) lessonLabel.style.display = 'block'; // Show lesson label
-                        lessonSelect.style.display = 'block'; // Show lesson dropdown for now
-
-                        if (selectedStandardValue && selectedSubjectValue && subjectData[selectedStandardValue] && subjectData[selectedStandardValue][selectedSubjectValue]) {
-                            const lessons = subjectData[selectedStandardValue][selectedSubjectValue];
-                            lessons.forEach((lesson, index) => {
-                                const option = document.createElement('option');
-                                option.value = `lesson${index + 1}`;
-                                option.textContent = lesson;
-                                lessonSelect.appendChild(option);
-                            });
-                            lessonSelect.disabled = false;
-                        } else if (selectedSubjectValue) { // Only "Mixed" available
-                            lessonSelect.disabled = false;
-                        }
-                        startQuizBtn.disabled = true; // Lesson must be chosen
-                    });
-                    if (subjectPillsContainer) subjectPillsContainer.appendChild(pill);
-                });
-            }
-        });
+        }
+        updateDropdownsState();
     });
 
-    // This event listener remains for the (soon to be replaced) lesson dropdown
-    lessonSelect.addEventListener('change', () => {
-        if (lessonSelect.value && selectedSubjectValue && selectedStandardValue) {
-            startQuizBtn.disabled = false;
-        } else {
-            startQuizBtn.disabled = true;
+    subjectSelect.addEventListener('change', () => {
+        const selectedStandard = standardSelect.value;
+        const selectedSubject = subjectSelect.value;
+        // Reset lesson dropdown
+        lessonSelect.innerHTML = '<option value="">Select Lesson</option><option value="mixed">All Lessons (Mixed Questions)</option>';
+
+        if (selectedStandard && selectedSubject && subjectData[selectedStandard] && subjectData[selectedStandard][selectedSubject]) {
+            const lessons = subjectData[selectedStandard][selectedSubject];
+            lessons.forEach((lesson, index) => {
+                const option = document.createElement('option');
+                // Lesson value will be lesson1, lesson2, etc. to match JSON file names
+                option.value = `lesson${index + 1}`;
+                option.textContent = lesson;
+                lessonSelect.appendChild(option);
+            });
         }
+        updateDropdownsState();
+    });
+
+    lessonSelect.addEventListener('change', () => {
+        updateDropdownsState();
     });
 
     startQuizBtn.addEventListener('click', () => {
-        const standard = selectedStandardValue; // Use the chip selected value
-        const subject = subjectSelect.value; // Will get from selected subject pill later
-        const lesson = lessonSelect.value; // Will get from lesson modal later
+        if (startQuizBtn.disabled) return; // Extra check
 
+        const standard = standardSelect.value;
+        const subject = subjectSelect.value;
+        const lesson = lessonSelect.value;
+
+        // Standard, subject, and lesson must be selected
         if (standard && subject && lesson) {
             const encodedStandard = standard.replace('+', 'plus');
             window.location.href = `quiz.html?standard=${encodedStandard}&subject=${encodeURIComponent(subject)}&lesson=${encodeURIComponent(lesson)}`;
         } else {
-            alert("Please make all selections.");
+            // This path should ideally not be taken due to button disabling logic
+            console.error("Attempted to start quiz without full selection.");
+            // Optionally, provide user feedback, though button state should prevent this
         }
     });
 
-    // Dark mode toggle
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    const body = document.body;
-
-    // Function to apply theme
+    // --- Dark Mode Logic ---
     function applyTheme(theme) {
         if (theme === 'dark') {
             body.classList.add('dark');
             if(darkModeToggle) darkModeToggle.setAttribute('aria-pressed', 'true');
-            // You might want to change the icon for the toggle here if you have separate light/dark icons
         } else {
             body.classList.remove('dark');
             if(darkModeToggle) darkModeToggle.setAttribute('aria-pressed', 'false');
         }
     }
 
-    // Load saved theme
+    // Load saved theme or default to system preference
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme) {
         applyTheme(savedTheme);
     } else {
-        // Default to system preference if no theme is saved in localStorage
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             applyTheme('dark');
+            // Optional: if defaulting to system dark, save it so toggle state is correct on first load
+            // localStorage.setItem('theme', 'dark');
         } else {
             applyTheme('light');
         }
@@ -171,7 +129,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (darkModeToggle) {
         darkModeToggle.addEventListener('click', () => {
-            if (body.classList.contains('dark')) {
+            const currentThemeIsDark = body.classList.contains('dark');
+            if (currentThemeIsDark) {
                 applyTheme('light');
                 localStorage.setItem('theme', 'light');
             } else {
@@ -179,10 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 localStorage.setItem('theme', 'dark');
             }
         });
-
-        // Optional: Update icon based on theme
-        // This requires two different SVG icons or manipulating the existing one.
-        // For simplicity, the current SVG is a moon, which generally implies toggling to dark.
-        // If it's dark, perhaps it should show a sun.
     }
+
+    // Initial state update for dropdowns and button
+    updateDropdownsState();
 });

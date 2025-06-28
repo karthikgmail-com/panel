@@ -1,22 +1,22 @@
 [
   {
-    "question": "Newton's first law of motion is also known as the law of:",
-    "options": ["Action-Reaction", "Inertia", "Momentum", "Energy"],
-    "answer": "Inertia"
+    "question": "The slope of a velocity-time graph represents:",
+    "options": ["Displacement", "Acceleration", "Speed", "Distance"],
+    "answer": "Acceleration"
   },
   {
-    "question": "What is the acceleration of a body moving with uniform velocity?",
-    "options": ["Constant", "Zero", "Variable", "Infinite"],
-    "answer": "Zero"
+    "question": "A car travels 30 km at a uniform speed of 60 km/h and the next 30 km at a uniform speed of 40 km/h. Calculate the total time taken.",
+    "options": ["1.00 hour", "1.25 hours", "1.50 hours", "0.75 hours"],
+    "answer": "1.25 hours"
   },
   {
-    "question": "A force of 10 N acts on a body of mass 2 kg. What is the acceleration produced?",
-    "options": ["20 m/s²", "0.2 m/s²", "5 m/s²", "12 m/s²"],
-    "answer": "5 m/s²"
+    "question": "What is the magnitude of the displacement of a particle which moves 3m East, then 4m North?",
+    "options": ["1m", "5m", "7m", "12m"],
+    "answer": "5m"
   },
   {
-    "question": "Momentum is the product of mass and __________.",
-    "options": ["Acceleration", "Force", "Velocity", "Displacement"],
+    "question": "Which of the following is a vector quantity?",
+    "options": ["Distance", "Speed", "Mass", "Velocity"],
     "answer": "Velocity"
   }
 ]

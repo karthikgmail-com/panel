@@ -1,16 +1,20 @@
+// Function to apply theme from localStorage
 function applyThemeOnLoad() {
     const savedTheme = localStorage.getItem('theme');
+    const body = document.body;
     if (savedTheme === 'dark') {
-        document.body.classList.add('dark');
-    } else {
-        document.body.classList.remove('dark'); // Default to light
+        body.classList.add('dark');
+    } else if (savedTheme === 'light') {
+        body.classList.remove('dark');
+    } else { // Not in localStorage, check system
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            body.classList.add('dark');
+        }
     }
 }
+applyThemeOnLoad();
 
 document.addEventListener('DOMContentLoaded', () => {
-    applyThemeOnLoad(); // Apply theme as soon as DOM is ready
-
-    const scoreDisplay = document.getElementById('score-display');
     const correctAnswersSpan = document.getElementById('correct-answers');
     const totalQuestionsSpan = document.getElementById('total-questions');
     const percentageDisplay = document.getElementById('percentage-display');
@@ -21,87 +25,93 @@ document.addEventListener('DOMContentLoaded', () => {
     const returnHomeBtn = document.getElementById('return-home-btn');
     const resultsCard = document.getElementById('results-card');
 
+    // Initial animation for results card
+    if (resultsCard) {
+        // Ensure it starts from the initial state defined in CSS if applicable
+        // resultsCard.classList.add('initial-state'); // If CSS defines .initial-state
+        setTimeout(() => {
+            resultsCard.classList.add('loaded'); // Triggers transition to opacity: 1, transform: translateY(0)
+        }, 100); // Short delay for CSS to apply initial state before transition
+    }
+
     const quizResultsData = JSON.parse(localStorage.getItem('quizResults'));
 
     if (quizResultsData) {
         const { score, totalQuestions, results, subject, lesson, standard } = quizResultsData;
 
-        correctAnswersSpan.textContent = score;
-        totalQuestionsSpan.textContent = totalQuestions;
-        const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
-        percentageDisplay.textContent = `${percentage}%`;
+        if (correctAnswersSpan) correctAnswersSpan.textContent = score;
+        if (totalQuestionsSpan) totalQuestionsSpan.textContent = totalQuestions;
 
-        if (percentage >= 80) {
-            resultMessage.textContent = "Excellent! Well done!";
-            if (typeof confetti === 'function') {
-                confetti({
-                    particleCount: 150,
-                    spread: 80,
-                    origin: { y: 0.6 },
-                    zIndex: 1001 // Ensure it's above other elements if needed
-                });
+        const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+        if (percentageDisplay) percentageDisplay.textContent = `${percentage}%`;
+
+        if (resultMessage) {
+            if (percentage >= 90) {
+                resultMessage.textContent = "Excellent! Perfect Score!";
+                if (typeof confetti === 'function') { confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 }, zIndex: 1001 }); }
+            } else if (percentage >= 75) {
+                resultMessage.textContent = "Great Job! You're doing well!";
+                if (typeof confetti === 'function') { confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 }, zIndex: 1001 }); }
+            } else if (percentage >= 50) {
+                resultMessage.textContent = "Good Effort! Keep practicing.";
+            } else {
+                resultMessage.textContent = "Keep practicing! Every attempt helps you learn.";
             }
-        } else if (percentage >= 60) {
-            resultMessage.textContent = "Good effort! Keep practicing.";
-        } else if (percentage >= 40) {
-            resultMessage.textContent = "Keep practicing to improve your score.";
-        } else {
-            resultMessage.textContent = "Don't give up! Review your answers and try again.";
         }
 
         const incorrectAnswers = results.filter(r => !r.isCorrect);
 
-        if (incorrectAnswers.length > 0) {
-            if(noIncorrectAnswersMsg) noIncorrectAnswersMsg.style.display = 'none';
-            incorrectAnswersContainer.innerHTML = ''; // Clear any placeholder
+        if (incorrectAnswersContainer) {
+            if (incorrectAnswers.length > 0) {
+                if (noIncorrectAnswersMsg) noIncorrectAnswersMsg.style.display = 'none';
+                incorrectAnswersContainer.innerHTML = '';
 
-            incorrectAnswers.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'incorrect-question-item p-4 bg-red-50 rounded-lg border border-red-200 mb-4 shadow-sm';
+                incorrectAnswers.forEach((item, idx) => {
+                    const itemElement = document.createElement('div');
+                    itemElement.className = 'incorrect-question-item p-3 my-3 bg-red-50 dark:bg-red-900/[.2] rounded-lg border border-red-200 dark:border-red-700/[.3] shadow-sm';
 
-                let optionsHTML = '<ul class="list-disc list-inside mt-1 text-sm">';
-                item.options.forEach(opt => {
-                    let optText = typeof opt === 'string' ? opt : opt.text;
-                    let optImg = typeof opt === 'object' && opt.image ? `<img src="${opt.image}" alt="Option image" class="option-image ml-2 my-1 inline-block max-h-10 rounded">` : '';
-
-                    if (optText === item.correctAnswer) {
-                        optionsHTML += `<li class="text-green-700 font-semibold">${optText} ${optImg} (Correct)</li>`;
-                    } else if (optText === item.userAnswer) {
-                        optionsHTML += `<li class="text-red-700 font-semibold">${optText} ${optImg} (Your Answer)</li>`;
-                    } else {
-                        // optionsHTML += `<li>${optText} ${optImg}</li>`;
+                    let questionPart = `<p class="question-text text-sm font-medium text-gray-800 dark:text-gray-200 mb-1"><strong>Q${results.findIndex(r => r.question === item.question) + 1}:</strong> ${item.question}</p>`;
+                    if (item.question_image) {
+                        questionPart += `<img src="${item.question_image}" alt="Question image" class="my-2 rounded-md max-h-40 border dark:border-slate-600">`;
                     }
+
+                    let userAnswerDisplay = 'Not answered';
+                    if (item.userAnswer !== null) {
+                        const userAnswerObject = item.options.find(opt => (typeof opt === 'string' ? opt : opt.text) === item.userAnswer);
+                        if (typeof userAnswerObject === 'object' && userAnswerObject.image) {
+                            userAnswerDisplay = `${item.userAnswer} <img src="${userAnswerObject.image}" alt="Your answer image" class="option-image ml-1 inline-block max-h-10 rounded">`;
+                        } else {
+                            userAnswerDisplay = item.userAnswer;
+                        }
+                    }
+
+                    const correctAnswerObject = item.options.find(opt => (typeof opt === 'string' ? opt : opt.text) === item.correctAnswer);
+                    let correctAnswerDisplay = item.correctAnswer;
+                     if (typeof correctAnswerObject === 'object' && correctAnswerObject.image) {
+                        correctAnswerDisplay = `${item.correctAnswer} <img src="${correctAnswerObject.image}" alt="Correct answer image" class="option-image ml-1 inline-block max-h-10 rounded">`;
+                    }
+
+                    itemElement.innerHTML = `
+                        ${questionPart}
+                        <p class="user-answer text-xs mt-1"><strong>Your Answer:</strong> <span class="text-red-600 dark:text-red-400 font-semibold">${userAnswerDisplay}</span></p>
+                        <p class="correct-answer text-xs"><strong>Correct Answer:</strong> <span class="text-green-600 dark:text-green-400 font-semibold">${correctAnswerDisplay}</span></p>
+                    `;
+                    incorrectAnswersContainer.appendChild(itemElement);
                 });
-                optionsHTML += '</ul>';
-
-
-                itemElement.innerHTML = `
-                    <p class="question-text text-md font-medium text-gray-800 mb-1"><strong>Q:</strong> ${item.question}</p>
-                    ${item.question_image ? `<img src="${item.question_image}" alt="Question image" class="my-2 rounded-md max-h-48">` : ''}
-                    <p class="user-answer text-sm mt-2"><strong>Your Answer:</strong> <span class="${item.isCorrect ? 'text-green-600' : 'text-red-600 font-semibold'}">${item.userAnswer || 'Not answered'}</span></p>
-                    <p class="correct-answer text-sm"><strong>Correct Answer:</strong> <span class="text-green-600 font-semibold">${item.correctAnswer}</span></p>
-                    ${incorrectAnswers.length < 5 ? `<details class="mt-1 text-sm"><summary class="cursor-pointer text-blue-600 hover:text-blue-800">Show all options</summary>${optionsHTML}</details>` : ''}
-
-                `;
-                incorrectAnswersContainer.appendChild(itemElement);
-            });
-        } else {
-            if(noIncorrectAnswersMsg) noIncorrectAnswersMsg.style.display = 'block';
-            incorrectAnswersContainer.innerHTML = ''; // Clear if it had anything
+            } else {
+                if (noIncorrectAnswersMsg) noIncorrectAnswersMsg.style.display = 'block';
+                incorrectAnswersContainer.innerHTML = '';
+            }
         }
 
         if (retakeQuizBtn) {
             retakeQuizBtn.addEventListener('click', () => {
-                // Navigate back to the same quiz
-                // Standard was stored as 'plus1' or 'plus2', needs to be converted back for URL if needed, or use as is if script.js handles it.
-                // script.js expects standard with '+', but quiz.js gets it as 'plus1'.
-                // For simplicity, let's assume quiz.html can take 'plus1' directly.
                 window.location.href = `quiz.html?standard=${standard}&subject=${encodeURIComponent(subject)}&lesson=${encodeURIComponent(lesson)}`;
             });
         }
 
     } else {
-        if (resultsCard) resultsCard.innerHTML = '<p class="text-center text-red-500">Could not load quiz results. Please try taking a quiz first.</p>';
+        if (resultsCard) resultsCard.innerHTML = '<p class="text-center text-red-500 dark:text-red-400 p-5">Could not load test results. Please try taking a test first.</p>';
     }
 
     if (returnHomeBtn) {
@@ -109,14 +119,4 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'index.html';
         });
     }
-
-    // Animate results card
-    if (resultsCard) {
-        setTimeout(() => {
-            resultsCard.classList.add('loaded'); // Add class to trigger CSS transition
-        }, 100); // Short delay to ensure transition is applied
-    }
-
-    // Clean up localStorage to prevent issues if the user navigates away and back
-    // localStorage.removeItem('quizResults'); // Or clear only on "Return to Home" / starting new quiz
 });

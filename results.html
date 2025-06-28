@@ -3,60 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Results - TN Board MCQ Challenge</title>
+    <title>Test Results - TN Board MCQ</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
-    <div class="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-roboto antialiased">
+    <div id="app-container" class="container mx-auto p-4 flex flex-col items-center justify-center min-h-screen">
         <canvas id="confetti-canvas" class="fixed top-0 left-0 w-full h-full pointer-events-none z-[1000]"></canvas>
-        <div id="results-card" class="bg-white dark:bg-gray-800 p-6 sm:p-10 rounded-xl shadow-2xl max-w-2xl w-full text-center transform transition-all duration-500 ease-out scale-95 opacity-0">
-            <!-- This initial state (scale-95 opacity-0) is for animation -->
-            <header class="mb-8">
-                <h1 class="text-4xl font-bold text-blue-600 dark:text-blue-400">Test Results</h1>
+
+        <div id="results-card" class="bg-white dark:bg-slate-800 p-6 sm:p-10 rounded-xl shadow-xl w-full max-w-2xl text-center opacity-0 transform translate-y-8">
+            <header class="mb-6 sm:mb-8">
+                <h1 class="text-2xl sm:text-3xl font-semibold text-blue-600 dark:text-sky-400">Test Results</h1>
             </header>
 
-            <section id="score-summary" class="mb-10">
-                <div class="mb-4">
-                    <p class="text-2xl font-semibold text-gray-700">Your Score:</p>
-                    <p id="score-display" class="text-5xl font-bold text-green-500 my-2">
-                        <span id="correct-answers">0</span> / <span id="total-questions">0</span>
+            <section id="score-summary" class="mb-8">
+                <div class="mb-3">
+                    <p class="text-4xl sm:text-5xl font-bold text-green-500 dark:text-green-400 my-1">
+                        <span id="correct-answers">0</span>/<span id="total-questions">0</span>
                     </p>
-                    <p id="percentage-display" class="text-3xl text-green-500 font-medium">0%</p>
+                    <p id="percentage-display" class="text-xl sm:text-2xl text-green-500 dark:text-green-400 font-medium">0%</p>
                 </div>
-                <p id="result-message" class="text-xl text-gray-600 mt-4">Well done!</p>
+                <p id="result-message" class="text-lg sm:text-xl text-gray-700 dark:text-gray-200 mt-2">Well done!</p>
             </section>
 
-            <section id="detailed-review" class="mb-10 text-left">
-                <h2 class="text-2xl sm:text-3xl font-semibold text-gray-700 dark:text-gray-200 mb-6 border-b border-gray-300 dark:border-gray-600 pb-3">Review Incorrect Answers:</h2>
-                <div id="incorrect-answers-container" class="space-y-6 max-h-96 overflow-y-auto pr-2 custom-scrollbar">
-                    <!-- Incorrect answers will be loaded here by results.js -->
-                    <!-- Example Incorrect Answer Structure -->
-                    <!--
-                    <div class="incorrect-question-item p-4 bg-red-50 rounded-lg border border-red-200">
-                        <p class="question-text text-md font-medium text-gray-800 mb-1"><strong>Q:</strong> What is the capital of Germany?</p>
-                        <img src="path/to/question_image.jpg" alt="Question image" class="my-1 rounded max-h-40">
-                        <p class="user-answer text-sm text-red-600"><strong>Your Answer:</strong> Frankfurt <img src="path/to/option_image.jpg" alt="Option image" class="ml-1 inline-block max-h-8"></p>
-                        <p class="correct-answer text-sm text-green-600"><strong>Correct Answer:</strong> Berlin</p>
-                    </div>
-                    -->
-                     <p id="no-incorrect-answers" class="text-gray-600 text-center py-4">Congratulations! No incorrect answers to review.</p>
+            <section id="detailed-review" class="mb-8 text-left">
+                <h2 class="text-lg sm:text-xl font-medium text-gray-700 dark:text-gray-200 mb-4 border-b border-gray-200 dark:border-slate-700 pb-2">Review Incorrect Answers:</h2>
+                <div id="incorrect-answers-container" class="space-y-5 max-h-80 overflow-y-auto p-1 custom-scrollbar">
+                     <p id="no-incorrect-answers" class="text-gray-600 dark:text-gray-300 text-center py-3">Congratulations! No incorrect answers to review.</p>
                 </div>
             </section>
 
-            <section id="actions" class="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-                <button id="retake-quiz-btn" class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800 transition-all duration-150 ease-in-out text-lg">
-                    Retake Quiz
+            <section id="actions" class="mt-8 flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+                <button id="retake-quiz-btn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-medium py-2.5 px-6 rounded-md shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-all duration-200 ease-in-out">
+                    Retake Test
                 </button>
-                <button id="return-home-btn" class="bg-gray-500 hover:bg-gray-600 dark:bg-gray-600 dark:hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-offset-gray-800 transition-all duration-150 ease-in-out text-lg">
+                <button id="return-home-btn" class="w-full sm:w-auto bg-gray-500 hover:bg-gray-600 dark:bg-slate-600 dark:hover:bg-slate-700 text-white font-medium py-2.5 px-6 rounded-md shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 dark:focus:ring-offset-slate-800 transition-all duration-200 ease-in-out">
                     Return to Home
                 </button>
             </section>
         </div>
 
         <footer class="text-center mt-12 py-4 sm:absolute sm:bottom-0 sm:left-0 sm:right-0">
-            {/* Footer content removed as per request */}
+            {/* Footer content removed */}
         </footer>
     </div>
     <script src="js/results.js"></script>

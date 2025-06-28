@@ -3,59 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TN Board MCQ Challenge</title>
+    <title>TN Board MCQ Test</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800">
-    <div class="container mx-auto p-4">
-        <header class="text-center py-6 relative">
-            <h1 class="text-4xl sm:text-5xl font-bold text-blue-600 dark:text-blue-400">TN Board MCQ Test</h1>
-            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode" class="absolute top-2 right-2 sm:top-4 sm:right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100 font-roboto antialiased">
+    <div id="app-container" class="container mx-auto p-4 max-w-3xl">
+        <header class="text-center py-8 relative">
+            <h1 class="text-3xl sm:text-4xl font-semibold text-blue-600 dark:text-sky-400">TN Board MCQ Test</h1>
+            <button id="dark-mode-toggle" aria-label="Toggle Dark Mode" class="absolute top-4 right-0 sm:right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
             </button>
         </header>
 
-        <main id="home-page" class="mt-10 bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-2xl max-w-lg mx-auto">
-            <h2 class="text-2xl sm:text-3xl font-semibold mb-8 text-center text-gray-700 dark:text-gray-200">Start a Test</h2>
+        <main id="home-page" class="mt-6 bg-white dark:bg-slate-800 p-6 sm:p-8 rounded-xl shadow-lg">
+            <h2 class="text-xl sm:text-2xl font-medium mb-6 text-center text-gray-700 dark:text-gray-200">Start a Test</h2>
 
-            <div class="mb-6">
-                <label class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-2 text-center">Select Standard:</label>
-                <div id="standard-chips-container" class="flex justify-center gap-3 sm:gap-4">
-                    <button data-value="+1" class="standard-chip text-lg font-semibold py-2.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-blue-600 dark:text-sky-400 hover:bg-gray-100 dark:hover:bg-slate-600 hover:scale-105">
-                        +1 <span class="text-sm font-normal">(Class 11)</span>
-                    </button>
-                    <button data-value="+2" class="standard-chip text-lg font-semibold py-2.5 px-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-2 dark:focus:ring-offset-gray-800 bg-white dark:bg-slate-700 border border-gray-300 dark:border-slate-600 text-blue-600 dark:text-sky-400 hover:bg-gray-100 dark:hover:bg-slate-600 hover:scale-105">
-                        +2 <span class="text-sm font-normal">(Class 12)</span>
-                    </button>
+            <div class="space-y-5">
+                <div>
+                    <label for="standard-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Standard</label>
+                    <select id="standard-select" name="standard" class="mt-1 block w-full py-2.5 px-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="">Select Standard</option>
+                        <option value="+1">+1 (Class 11)</option>
+                        <option value="+2">+2 (Class 12)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="subject-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Subject</label>
+                    <select id="subject-select" name="subject" class="mt-1 block w-full py-2.5 px-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" disabled>
+                        <option value="">Select Subject</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="lesson-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Lesson</label>
+                    <select id="lesson-select" name="lesson" class="mt-1 block w-full py-2.5 px-3 border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-900 dark:text-gray-100 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm" disabled>
+                        <option value="">Select Lesson</option>
+                        <option value="mixed">All Lessons (Mixed Questions)</option>
+                    </select>
                 </div>
             </div>
 
-            <div class="mb-6">
-                <label id="subject-label" class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-2 text-center" style="display: none;">Select Subject:</label>
-                <div id="subject-pills-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mt-2" style="display: none;">
-                    {/* Subject pill buttons will be dynamically inserted here by JS */}
-                </div>
-                {/* Keep the old select hidden for now, to store the selected value easily until lesson UI is also changed */}
-                <select id="subject-select" name="subject" class="hidden" disabled> <option value=""></option> </select>
+            <div class="mt-8 text-center">
+                <button id="start-quiz-btn" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 dark:bg-sky-500 dark:hover:bg-sky-600 text-white font-medium py-2.5 px-10 rounded-md shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-slate-800 transition-all duration-200 ease-in-out text-base" disabled>
+                    Start Test
+                </button>
             </div>
-
-            <div class="mb-8">
-                <label id="lesson-label" class="block text-md font-medium text-gray-700 dark:text-gray-300 mb-1.5" style="display: none;">Lesson:</label>
-                <select id="lesson-select" name="lesson" class="mt-1 block w-full py-2.5 px-3.5 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400 focus:border-indigo-500 dark:focus:border-indigo-400 sm:text-md" disabled style="display: none;">
-                    <option value="">Select Lesson (or All Lessons)</option>
-                    <option value="mixed">All Lessons (Mixed Questions)</option>
-                    {/* Options will be populated by JS */}
-                </select>
-            </div>
-
-            <button id="start-quiz-btn" class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-3.5 px-4 rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 transition-all duration-150 ease-in-out text-lg" disabled>
-                Let's Go!
-            </button>
         </main>
 
-        <footer class="text-center mt-16 py-6">
-            {/* Footer content removed as per request */}
+        <footer class="text-center mt-12 py-4">
+            {/* Footer content removed as per previous request */}
         </footer>
     </div>
     <script src="js/script.js"></script>

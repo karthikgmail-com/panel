@@ -1,50 +1,33 @@
 [
   {
-    "question": "What is the SI unit of force?",
-    "options": ["Watt", "Newton", "Joule", "Pascal"],
-    "answer": "Newton"
+    "question": "What is the SI unit of length?",
+    "options": ["Kilogram", "Meter", "Second", "Ampere"],
+    "answer": "Meter"
   },
   {
-    "question": "Newton's first law of motion is also known as the law of:",
-    "options": ["Action-Reaction", "Inertia", "Momentum", "Energy"],
-    "answer": "Inertia"
+    "question": "The slope of a velocity-time graph represents:",
+    "options": ["Displacement", "Acceleration", "Speed", "Distance"],
+    "answer": "Acceleration"
   },
   {
-    "question": "Identify the instrument shown in the image.",
-    "question_image": "https://via.placeholder.com/300x150.png?text=Vernier+Calliper",
+    "question": "Which instrument is used to measure the diameter of a thin wire accurately?",
+    "question_image": "https://via.placeholder.com/300x150.png?text=Measurement+Tools",
     "options": [
-      "Screw Gauge",
+      "Metre Scale",
       "Vernier Calliper",
-      "Spherometer",
-      "Common Balance"
+      "Screw Gauge",
+      "Spherometer"
     ],
-    "answer": "Vernier Calliper"
+    "answer": "Screw Gauge"
   },
   {
-    "question": "A force of 10 N acts on a body of mass 2 kg. What is the acceleration produced?",
-    "options": ["20 m/s²", "0.2 m/s²", "5 m/s²", "12 m/s²"],
-    "answer": "5 m/s²"
+    "question": "What is the magnitude of the displacement of a particle which moves 3m East, then 4m North?",
+    "options": ["1m", "5m", "7m", "12m"],
+    "answer": "5m"
   },
   {
-    "question": "Which of these graphs represents uniform motion?",
-    "options": [
-      {
-        "text": "Graph A",
-        "image": "https://via.placeholder.com/150x100.png?text=Graph+A (Curved)"
-      },
-      {
-        "text": "Graph B",
-        "image": "https://via.placeholder.com/150x100.png?text=Graph+B (Straight+Line)"
-      },
-      {
-        "text": "Graph C",
-        "image": "https://via.placeholder.com/150x100.png?text=Graph+C (ZigZag)"
-      },
-      {
-        "text": "Graph D",
-        "image": "https://via.placeholder.com/150x100.png?text=Graph+D (Circle)"
-      }
-    ],
-    "answer": "Graph B"
+    "question": "The number 0.005020 has how many significant figures?",
+    "options": ["3", "4", "5", "6"],
+    "answer": "4"
   }
 ]
